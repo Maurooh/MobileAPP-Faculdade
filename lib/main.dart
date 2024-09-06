@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import 'db_helper.dart';
 
 void main() {
