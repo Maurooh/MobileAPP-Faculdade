@@ -14,13 +14,16 @@ class FazendaApp extends StatelessWidget {
       title: 'Controle de Estoque da Fazenda',
       theme: ThemeData(
         primarySwatch: Colors.green,
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.black87),
+          bodyMedium: TextStyle(color: Colors.black87),
+        ),
       ),
       home: LoginScreen(),
     );
   }
 }
 
-// Tela de Login
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -30,43 +33,65 @@ class LoginScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Usuário'),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Usuário',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EstoqueScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text('Entrar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CadastroScreen()),
+                    );
+                  },
+                  child: Text('Não tem uma conta? Cadastre-se'),
+                ),
+              ],
             ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Senha'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navega para a tela de Estoque
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EstoqueScreen()),
-                );
-              },
-              child: Text('Entrar'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CadastroScreen()),
-                );
-              },
-              child: Text('Não tem uma conta? Cadastre-se'),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-// Tela de Cadastro
 class CadastroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -76,41 +101,70 @@ class CadastroScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Usuário'),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Usuário',
+                    prefixIcon: Icon(Icons.person_add),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar Senha',
+                    prefixIcon: Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  obscureText: true,
+                ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text('Cadastrar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Já tem uma conta? Faça login'),
+                ),
+              ],
             ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Senha'),
-              obscureText: true,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Confirmar Senha'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Aqui você pode adicionar lógica para cadastrar o usuário
-                Navigator.pop(context);
-              },
-              child: Text('Cadastrar'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Já tem uma conta? Faça login'),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-// Tela de Estoque
 class EstoqueScreen extends StatefulWidget {
   @override
   _EstoqueScreenState createState() => _EstoqueScreenState();
@@ -142,24 +196,41 @@ class _EstoqueScreenState extends State<EstoqueScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _searchController,
-              decoration: InputDecoration(labelText: 'Buscar Item'),
+              decoration: InputDecoration(
+                labelText: 'Buscar Item',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _buscarItem,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               child: Text('Buscar'),
             ),
             SizedBox(height: 20),
             Text(
               _resultadoBusca,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
       ),
-    );
+    )
   }
 }
