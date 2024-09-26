@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/cadastroscreen.dart';
 import 'package:flutter_application_1/estoquescreen.dart';
-import 'package:path/path.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           SizedBox(
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Usuário',
+                      labelText: 'E-mail',
                       labelStyle: TextStyle(color: Colors.white),
                       prefixIcon: Icon(
                         Icons.person,
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Senha',
                       labelStyle: TextStyle(color: Colors.white),
                       prefixIcon: Icon(
-                        Icons.person,
+                        Icons.lock,
                         color: Colors.white,
                       ),
                       border: OutlineInputBorder(
@@ -105,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         foregroundColor: const Color.fromARGB(255, 0, 0, 0)),
                     child: Text('Entrar'),
                   ),
+                  SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
