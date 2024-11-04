@@ -10,15 +10,15 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const config = {
-    user: 'mauro',
-    password: '123456',
-    server: 'LAPTOP-UJ4JFIKG', // exemplo: localhost
-    database: 'master',
-    options: {
-        encrypt: false, // Use true se você estiver em um servidor Azure
-        trustServerCertificate: true, // Mude para false em produção
-    },
+const dbConfig = {
+  user: process.env.DB_USER,        
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,      
+  database: process.env.DB_DATABASE,
+  options: {
+    encrypt: true,
+    enableArithAbort: true,
+  }
 };
 
 sql.connect(config, err => {
