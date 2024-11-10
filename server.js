@@ -99,7 +99,7 @@ app.get('/search', async (req, res) => {
     
     try {
         const request = await poolPromise.request();  // Usando poolPromise para criar a requisição
-        const result = await request.query`SELECT nome, descricao, qtd_disponivel, imagem FROM produtos WHERE nome LIKE ${`%${query}%`}`;
+        const result = await request.query`SELECT nome, descricao, qtd_disponivel, imagem FROM Produto WHERE nome LIKE ${`%${query}%`}`;
 
         res.json(result.recordset); // Envia os resultados da consulta para o cliente
     } catch (err) {
