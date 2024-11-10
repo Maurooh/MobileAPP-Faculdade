@@ -1,13 +1,11 @@
 // app.js
 const express = require('express');
 const sql = require('mssql');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3000;
 
-app.use(cors());
 app.use(bodyParser.json());
 
 const dbConfig = {
@@ -21,12 +19,6 @@ const dbConfig = {
   }
 };
 
-const corsOptions = {
-    origin: '*', // Ou defina o domínio específico, ex: 'http://localhost:5173'
-};
-app.use(cors(corsOptions));
-
-
 sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     if (err) {
       console.error('Erro ao conectar ao banco de dados:', err);
@@ -34,7 +26,6 @@ sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     }
     console.log('Conectado ao banco de dados!');
   });
-
 
 // Rota para cadastrar usuário
 app.post('/register', async (req, res) => {
@@ -113,7 +104,6 @@ app.get('/search', async (req, res) => {
         return res.status(500).json({ error: 'Erro ao buscar produtos.' });
     }
 });
-
 
 app.listen(port, () => {
     console.log(`API rodando em http://localhost:${port}`);
