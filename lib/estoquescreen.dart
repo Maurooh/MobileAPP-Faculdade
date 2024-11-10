@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class EstoqueScreen extends StatefulWidget {
   @override
@@ -119,29 +118,31 @@ class _EstoqueScreenState extends State<EstoqueScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              // Exibindo a imagem do produto com CachedNetworkImage
-                              if (product['imagem'] != null && product['imagem'].isNotEmpty)
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white,
-                                  ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: product['imagem'], // URL da imagem
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => CircularProgressIndicator(), // Indicador de carregamento
-                                    errorWidget: (context, url, error) => Icon(Icons.broken_image, color: Colors.grey), // Ícone de erro
-                                  ),
-                                )
-                              else
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  color: Colors.grey,
-                                  child: Icon(Icons.image_not_supported, color: Colors.white), // Ícone se não houver imagem
+                              // Exibindo a imagem do produto com Image.network
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.white,
                                 ),
+                                child: product['imagem'] != null && product['imagem'].isNotEmpty
+                                    ? Image.network(
+                                        product['imagem'], // URL da imagem
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child; // Imagem carregada
+                                          } else {
+                                            return Center(child: CircularProgressIndicator());
+                                          }
+                                        },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(Icons.broken_image, color: Colors.grey);
+                                        },
+                                      )
+                                    : Icon(Icons.image_not_supported, color: Colors.grey), // Ícone se não houver imagem
+                              ),
                               SizedBox(width: 16),
                               // Exibindo detalhes do produto
                               Expanded(
