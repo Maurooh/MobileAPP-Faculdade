@@ -94,23 +94,18 @@ const createPool = async () => {
 
 createPool();
 
-app.get('/search', async (req, res) => {
-    const query = req.query.query; // Obtém a consulta da URL
-    try {
-      if (!poolPromise) {
-        throw new Error('Conexão não estabelecida');
+app.get('/search', (req, res) => {
+    const query = req.query.query || '';
+    const sql = `SELECT nome, descricao, qtd_disponivel, imagem FROM produtos WHERE nome LIKE ?`;
+  
+    db.query(sql, [`%${query}%`], (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Erro ao buscar produtos.' });
       }
-      const pool = await poolPromise; // Aguarda a conexão
-      const result = await pool.request()
-        .input('query', sql.VarChar, `%${query}%`) // Usa parâmetro para evitar SQL Injection
-        .query('SELECT * FROM Produto WHERE nome LIKE @query');
-      
-      res.json(result.recordset);
-    } catch (err) {
-      console.error('Erro ao buscar produtos:', err);
-      res.status(500).send('Erro ao buscar produtos');
-    }
+      res.json(results);
+    });
   });
+
 
 app.listen(port, () => {
     console.log(`API rodando em http://localhost:${port}`);

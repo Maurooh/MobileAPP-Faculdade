@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class EstoqueScreen extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _EstoqueScreenState extends State<EstoqueScreen> {
       return;
     }
 
-    final response = await http.get(Uri.parse('https://apis-ppqi.onrender.com/search?query=$query'));
+    final response = await http.get(Uri.parse('https://flutter-application-1.onrender.com/search?query=$query'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -118,7 +119,7 @@ class _EstoqueScreenState extends State<EstoqueScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              // Exibindo a imagem do produto
+                              // Exibindo a imagem do produto com CachedNetworkImage
                               if (product['imagem'] != null && product['imagem'].isNotEmpty)
                                 Container(
                                   width: 80,
@@ -127,12 +128,11 @@ class _EstoqueScreenState extends State<EstoqueScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     color: Colors.white,
                                   ),
-                                  child: Image.network(
-                                    product['imagem'], // URL da imagem
+                                  child: CachedNetworkImage(
+                                    imageUrl: product['imagem'], // URL da imagem
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(Icons.broken_image, color: Colors.grey);
-                                    },
+                                    placeholder: (context, url) => CircularProgressIndicator(), // Indicador de carregamento
+                                    errorWidget: (context, url, error) => Icon(Icons.broken_image, color: Colors.grey), // Ícone de erro
                                   ),
                                 )
                               else
@@ -140,7 +140,7 @@ class _EstoqueScreenState extends State<EstoqueScreen> {
                                   width: 80,
                                   height: 80,
                                   color: Colors.grey,
-                                  child: Icon(Icons.image_not_supported, color: Colors.white),
+                                  child: Icon(Icons.image_not_supported, color: Colors.white), // Ícone se não houver imagem
                                 ),
                               SizedBox(width: 16),
                               // Exibindo detalhes do produto
