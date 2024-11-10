@@ -21,6 +21,12 @@ const dbConfig = {
   }
 };
 
+const corsOptions = {
+    origin: '*', // Ou defina o domínio específico, ex: 'http://localhost:5173'
+};
+app.use(cors(corsOptions));
+
+
 sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     if (err) {
       console.error('Erro ao conectar ao banco de dados:', err);
