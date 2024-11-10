@@ -21,7 +21,7 @@ const dbConfig = {
   }
 };
 
-sql.connect(config, err => {
+sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     if (err) {
       console.error('Erro ao conectar ao banco de dados:', err);
       return;
@@ -41,7 +41,7 @@ app.post('/register', async (req, res) => {
 
     try {
         // Conectando ao banco de dados
-        await sql.connect(config);
+        await sql.connect(dbConfig);  // Alterado para dbConfig
 
         // Verificando se o CPF ou e-mail já existem
         const result = await sql.query`SELECT * FROM Cliente WHERE cpf = ${cpf} OR email = ${email}`;
@@ -65,7 +65,7 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        await sql.connect(config);
+        await sql.connect(dbConfig);  // Alterado para dbConfig
         const result = await sql.query`SELECT * FROM Cliente WHERE email = ${email} AND senha = ${password}`;
         if (result.recordset.length > 0) {
             res.status(200).send(result.recordset[0]);
@@ -83,7 +83,7 @@ let poolPromise; // Declaramos a variável aqui
 // Função para criar a conexão
 const createPool = async () => {
   try {
-    poolPromise = await new sql.ConnectionPool(config).connect();
+    poolPromise = await new sql.ConnectionPool(dbConfig).connect();  // Alterado para dbConfig
     console.log('Conectado ao banco de dados!');
     return poolPromise;
   } catch (err) {
