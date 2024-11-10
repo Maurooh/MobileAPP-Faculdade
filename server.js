@@ -94,17 +94,19 @@ const createPool = async () => {
 
 createPool();
 
-app.get('/search', (req, res) => {
+app.get('/search', async (req, res) => {
     const query = req.query.query || '';
-    const sql = `SELECT nome, descricao, qtd_disponivel, imagem FROM produtos WHERE nome LIKE ?`;
-  
-    db.query(sql, [`%${query}%`], (err, results) => {
-      if (err) {
+    
+    try {
+        const request = await poolPromise.request();  // Usando poolPromise para criar a requisição
+        const result = await request.query`SELECT nome, descricao, qtd_disponivel, imagem FROM produtos WHERE nome LIKE ${`%${query}%`}`;
+
+        res.json(result.recordset); // Envia os resultados da consulta para o cliente
+    } catch (err) {
+        console.error('Erro ao buscar produtos:', err);
         return res.status(500).json({ error: 'Erro ao buscar produtos.' });
-      }
-      res.json(results);
-    });
-  });
+    }
+});
 
 
 app.listen(port, () => {
