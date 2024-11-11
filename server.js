@@ -10,15 +10,15 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const config = {
-    user: 'mauro',
-    password: '123456',
-    server: 'LAPTOP-UJ4JFIKG', // exemplo: localhost
-    database: 'master',
-    options: {
-        encrypt: false, // Use true se você estiver em um servidor Azure
-        trustServerCertificate: true, // Mude para false em produção
-    },
+const dbConfig = {
+  user: 'fazendatech',
+  password: 'Fazenda123',
+  server: 'fazendatech.database.windows.net', // ou o IP do seu servidor
+  database: 'Fazendatech',
+  options: {
+    encrypt: true, // Habilita a criptografia
+    enableArithAbort: true,
+  }
 };
 
 sql.connect(config, err => {
