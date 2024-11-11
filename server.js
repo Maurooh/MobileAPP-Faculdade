@@ -11,17 +11,30 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const dbConfig = {
+<<<<<<< HEAD
   user: 'fazendatech',
   password: 'Fazenda123',
   server: 'fazendatech.database.windows.net', // ou o IP do seu servidor
   database: 'Fazendatech',
   options: {
     encrypt: true, // Habilita a criptografia
+=======
+  user: process.env.DB_USER,        
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,      
+  database: process.env.DB_DATABASE,
+  options: {
+    encrypt: true,
+>>>>>>> 46a0fcc3103a8cc3a357ebfe65347b1f1665f750
     enableArithAbort: true,
   }
 };
 
-sql.connect(config, err => {
+app.use(cors({
+  origin: 'https://flutter-application-1.onrender.com' // Substitua pela sua URL local
+}));
+
+sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     if (err) {
       console.error('Erro ao conectar ao banco de dados:', err);
       return;
@@ -41,7 +54,7 @@ app.post('/register', async (req, res) => {
 
     try {
         // Conectando ao banco de dados
-        await sql.connect(config);
+        await sql.connect(dbConfig);  // Alterado para dbConfig
 
         // Verificando se o CPF ou e-mail já existem
         const result = await sql.query`SELECT * FROM Cliente WHERE cpf = ${cpf} OR email = ${email}`;
@@ -65,7 +78,7 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        await sql.connect(config);
+        await sql.connect(dbConfig);  // Alterado para dbConfig
         const result = await sql.query`SELECT * FROM Cliente WHERE email = ${email} AND senha = ${password}`;
         if (result.recordset.length > 0) {
             res.status(200).send(result.recordset[0]);
@@ -83,7 +96,7 @@ let poolPromise; // Declaramos a variável aqui
 // Função para criar a conexão
 const createPool = async () => {
   try {
-    poolPromise = await new sql.ConnectionPool(config).connect();
+    poolPromise = await new sql.ConnectionPool(dbConfig).connect();  // Alterado para dbConfig
     console.log('Conectado ao banco de dados!');
     return poolPromise;
   } catch (err) {
@@ -94,23 +107,20 @@ const createPool = async () => {
 
 createPool();
 
-app.get('/search', async (req, res) => {
-    const query = req.query.query; // Obtém a consulta da URL
-    try {
-      if (!poolPromise) {
-        throw new Error('Conexão não estabelecida');
-      }
-      const pool = await poolPromise; // Aguarda a conexão
-      const result = await pool.request()
-        .input('query', sql.VarChar, `%${query}%`) // Usa parâmetro para evitar SQL Injection
-        .query('SELECT * FROM Produto WHERE nome LIKE @query');
-      
-      res.json(result.recordset);
-    } catch (err) {
-      console.error('Erro ao buscar produtos:', err);
-      res.status(500).send('Erro ao buscar produtos');
+app.get('/search', (req, res) => {
+  const query = req.query.query || '';
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || 0;
+  const sql = `SELECT nome, descricao, qtd_disponivel, imagem FROM produtos WHERE nome LIKE ? LIMIT ? OFFSET ?`;
+
+  db.query(sql, [`%${query}%`, limit, offset], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Erro ao buscar produtos.' });
     }
+    res.json(results);
   });
+});
+
 
 app.listen(port, () => {
     console.log(`API rodando em http://localhost:${port}`);
