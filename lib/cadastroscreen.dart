@@ -54,7 +54,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Image.asset('assets/imgs/agricultura.jpg', fit: BoxFit.cover),
+            child: Image.asset('assets/assets/imgs/agricultura.jpg', fit: BoxFit.cover),
           ),
           Container(
             height: MediaQuery.of(context).size.height,

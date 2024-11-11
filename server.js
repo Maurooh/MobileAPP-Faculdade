@@ -21,9 +21,6 @@ const dbConfig = {
   }
 };
 
-app.use(cors({
-  origin: 'https://flutter-application-1.onrender.com' // Substitua pela sua URL local
-}));
 
 sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     if (err) {
