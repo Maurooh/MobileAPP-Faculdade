@@ -21,7 +21,6 @@ const dbConfig = {
   }
 };
 
-const cors = require('cors');
 app.use(cors({
   origin: 'https://flutter-application-1.onrender.com' // Substitua pela sua URL local
 }));
