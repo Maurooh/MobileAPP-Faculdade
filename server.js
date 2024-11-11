@@ -1,11 +1,13 @@
 // app.js
 const express = require('express');
 const sql = require('mssql');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 const dbConfig = {
@@ -19,6 +21,11 @@ const dbConfig = {
   }
 };
 
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://flutter-application-1.onrender.com' // Substitua pela sua URL local
+}));
+
 sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     if (err) {
       console.error('Erro ao conectar ao banco de dados:', err);
@@ -26,6 +33,7 @@ sql.connect(dbConfig, err => {  // Altere para dbConfig aqui
     }
     console.log('Conectado ao banco de dados!');
   });
+
 
 // Rota para cadastrar usuário
 app.post('/register', async (req, res) => {
@@ -91,19 +99,20 @@ const createPool = async () => {
 
 createPool();
 
-app.get('/search', async (req, res) => {
-    const query = req.query.query || '';
-    
-    try {
-        const request = await poolPromise.request();  // Usando poolPromise para criar a requisição
-        const result = await request.query`SELECT nome, descricao, qtd_disponivel, imagem FROM Produto WHERE nome LIKE ${`%${query}%`}`;
+app.get('/search', (req, res) => {
+  const query = req.query.query || '';
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || 0;
+  const sql = `SELECT nome, descricao, qtd_disponivel, imagem FROM produtos WHERE nome LIKE ? LIMIT ? OFFSET ?`;
 
-        res.json(result.recordset); // Envia os resultados da consulta para o cliente
-    } catch (err) {
-        console.error('Erro ao buscar produtos:', err);
-        return res.status(500).json({ error: 'Erro ao buscar produtos.' });
+  db.query(sql, [`%${query}%`, limit, offset], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Erro ao buscar produtos.' });
     }
+    res.json(results);
+  });
 });
+
 
 app.listen(port, () => {
     console.log(`API rodando em http://localhost:${port}`);
